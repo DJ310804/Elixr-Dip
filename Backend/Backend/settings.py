@@ -40,9 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
     # Custom Apps
     'API',
     # Third Party Apps
+=======
+    'api',
+>>>>>>> 52500a8adb76aedf3f5500c50ac55dd9f190c0b4
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',

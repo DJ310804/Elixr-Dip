@@ -1,4 +1,5 @@
 from django.db import models
+<<<<<<< HEAD
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.utils.html import mark_safe
@@ -105,3 +106,5 @@ class Notification(models.Model):
             return f"{self.type} - {self.post.title}"
         else:
             return "Notification"
+=======
+>>>>>>> 52500a8adb76aedf3f5500c50ac55dd9f190c0b4
