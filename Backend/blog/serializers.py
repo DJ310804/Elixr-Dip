@@ -2,9 +2,8 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from api import models as api_models
+from blog import models as blog_models
 
 class CategorySerializer(serializers.ModelSerializer):
     post_count = serializers.SerializerMethodField()
@@ -21,7 +20,7 @@ class CategorySerializer(serializers.ModelSerializer):
         return category.posts.count()
     
     class Meta:
-        model = api_models.Category
+        model = blog_models.Category
         fields = [
             "id",
             "title",
@@ -41,7 +40,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = api_models.Comment
+        model = blog_models.Comment
         fields = "__all__"
 
     def __init__(self, *args, **kwargs):
@@ -57,7 +56,7 @@ class PostSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True)
     
     class Meta:
-        model = api_models.Post
+        model = blog_models.Post
         fields = "__all__"
 
     def __init__(self, *args, **kwargs):
@@ -73,7 +72,7 @@ class PostSerializer(serializers.ModelSerializer):
 class BookmarkSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = api_models.Bookmark
+        model = blog_models.Bookmark
         fields = "__all__"
 
 
@@ -88,7 +87,7 @@ class BookmarkSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):  
 
     class Meta:
-        model = api_models.Notification
+        model = blog_models.Notification
         fields = "__all__"
 
     def __init__(self, *args, **kwargs):
