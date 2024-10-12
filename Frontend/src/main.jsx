@@ -11,6 +11,9 @@ import Chat from './components/chat/Chat.jsx';
 import Layout from './components/Layout.jsx';
 import BlogPage from './components/blogs/BlogPage.jsx';
 import VideoChat from './components/videochat/VideoChat.jsx';
+import LoginPage from './components/login/Login.jsx';
+import Home from './components/home/Home.jsx';
+import RegistrationPage from './components/Register.jsx';
 
 const Root = () => {
   const currentTheme = useSelector((state) => state.theme.theme);
@@ -29,10 +32,13 @@ const router = createBrowserRouter(
       <Route path="/" element={<Layout />}>
         <Route index element={<App />} />
         <Route path="/blogs" element={<><AddBlogs /><Blogs /></>} />
-        <Route path="/blog/:id" element={<BlogPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/home" element={<Home />} />
       </Route>
         <Route path="/chat" element={<Chat />} />
         <Route path="/video-chat" element={<VideoChat />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegistrationPage />} />
     </>
   )
 );
