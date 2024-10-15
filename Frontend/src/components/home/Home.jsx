@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Video, Coffee, Send } from 'lucide-react';
 
+
 const HomePage = () => {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
