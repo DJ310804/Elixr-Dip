@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'blog',
-    'api',
+    'API',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +63,7 @@ MIDDLEWARE = [
 #     'django.contrib.auth.backends.ModelBackend',
 # )
 
-ROOT_URLCONF = 'backend.urls'
+ROOT_URLCONF = 'Backend.urls'
 
 TEMPLATES = [
     {
@@ -85,7 +85,7 @@ TEMPLATES = [
 
 # SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
 
-WSGI_APPLICATION = 'backend.wsgi.application'
+WSGI_APPLICATION = 'Backend.wsgi.application'
 
 
 # Database
@@ -188,7 +188,6 @@ PASSWORD_RESET_TIMEOUT=900
 CORS_ORIGIN_ALLOW_ALL = True  # Allow all origins for development
 
 # For production, you should specify allowed origins like this:
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:51173",
-#     "https://yourdomain.com",
-# ]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]

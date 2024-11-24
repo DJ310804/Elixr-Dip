@@ -105,7 +105,7 @@ export default function Dashboard() {
   <div class="container px-5 py-24 mx-auto">
     <div class="flex flex-wrap -m-4">
       <div class="p-4 lg:w-1/3">
-        <div class="h-full bg-gray-100 bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
+        <div class="h-full bg-base-100 bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
           <h2 class="tracking-widest text-xs title-font font-medium mb-1">CATEGORY</h2>
           <h1 class="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">Confessions</h1>
           <p class="leading-relaxed mb-3">Chat with some purpose or some confession which you can't make to anybody else</p>
@@ -131,7 +131,7 @@ export default function Dashboard() {
         </div>
       </div>
       <div class="p-4 lg:w-1/3">
-        <div class="h-full bg-gray-100 bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
+        <div class="h-full bg-base-100 bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
           <h2 class="tracking-widest text-xs title-font font-medium  mb-1">CATEGORY</h2>
           <h1 class="title-font sm:text-2xl text-xl font-medium mb-3">Opinions</h1>
           <p class="leading-relaxed mb-3">Give a opinion you always wanted to give but had no one to listen to. Read other's opinion and react to them according to your wish or ask questions if you have any</p>
@@ -157,7 +157,7 @@ export default function Dashboard() {
         </div>
       </div>
       <div class="p-4 lg:w-1/3">
-        <div class="h-full bg-gray-100 bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
+        <div class="h-full bg-base-100 bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
           <h2 class="tracking-widest text-xs title-font font-medium  mb-1">CATEGORY</h2>
           <h1 class="title-font sm:text-2xl text-xl font-medium  mb-3">Chill</h1>
           <p class="leading-relaxed mb-3">Chill with random strangers of your interest and have meaningfull conversations</p>

@@ -1,99 +1,26 @@
-from django.contrib.auth.password_validation import validate_password
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
+from .models import BlogPost
 
-from blog import models as blog_models
+# class TagSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Tag
+#         fields = ['id', 'name']
 
-class CategorySerializer(serializers.ModelSerializer):
-    post_count = serializers.SerializerMethodField()
+# class SectionSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Section
+#         fields = ['id', 'title', 'content']
 
-    '''
-        category.post_set: In Django, when you define a ForeignKey relationship from one model to another 
-        (e.g., Post model having a ForeignKey relationship to the Category model), 
-        Django creates a reverse relationship from the related model back to the model that has the ForeignKey. 
-        By default, this reverse relationship is named <model>_set. In this case, since the Post model has a 
-        ForeignKey to the Category model, Django creates a reverse relationship from Category to Post named post_set. 
-        This allows you to access all Post objects related to a Category instance.
-    '''
-    def get_post_count(self, category):
-        return category.posts.count()
-    
-    class Meta:
-        model = blog_models.Category
-        fields = [
-            "id",
-            "title",
-            "image",
-            "slug",
-            "post_count",
-        ]
+# class MediaSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Media
+#         fields = ['id', 'type', 'url', 'description']
 
-    def __init__(self, *args, **kwargs):
-        super(CategorySerializer, self).__init__(*args, **kwargs)
-        request = self.context.get('request')
-        if request and request.method == 'POST':
-            self.Meta.depth = 0
-        else:
-            self.Meta.depth = 3
-
-class CommentSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = blog_models.Comment
-        fields = "__all__"
-
-    def __init__(self, *args, **kwargs):
-        super(CommentSerializer, self).__init__(*args, **kwargs)
-        request = self.context.get('request')
-        if request and request.method == 'POST':
-            self.Meta.depth = 0
-        else:
-            self.Meta.depth = 1
-
-
-class PostSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True)
-    
-    class Meta:
-        model = blog_models.Post
-        fields = "__all__"
-
-    def __init__(self, *args, **kwargs):
-        super(PostSerializer, self).__init__(*args, **kwargs)
-        request = self.context.get('request')
-        if request and request.method == 'POST':
-            self.Meta.depth = 0
-        else:
-            self.Meta.depth = 3
-
-
-
-class BookmarkSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = blog_models.Bookmark
-        fields = "__all__"
-
-
-    def __init__(self, *args, **kwargs):
-        super(BookmarkSerializer, self).__init__(*args, **kwargs)
-        request = self.context.get('request')
-        if request and request.method == 'POST':
-            self.Meta.depth = 0
-        else:
-            self.Meta.depth = 3
-    
-class NotificationSerializer(serializers.ModelSerializer):  
+class BlogPostSerializer(serializers.ModelSerializer):
+    # tags = TagSerializer(many=True)
+    # sections = SectionSerializer(many=True)
+    # media = MediaSerializer(many=True)
 
     class Meta:
-        model = blog_models.Notification
-        fields = "__all__"
-
-    def __init__(self, *args, **kwargs):
-        super(NotificationSerializer, self).__init__(*args, **kwargs)
-        request = self.context.get('request')
-        if request and request.method == 'POST':
-            self.Meta.depth = 0
-        else:
-            self.Meta.depth = 3
+        model = BlogPost
+        fields = '__all__'

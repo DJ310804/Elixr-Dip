@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { AlertCircle, Edit, Trash, Save, X, Plus, Minus, Music, Video, Image } from 'lucide-react';
 
 const BlogPostCreator = () => {
@@ -17,6 +18,28 @@ const BlogPostCreator = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Submit logic (add or update post)
+    console.log({
+      title,
+      content,
+      category,
+      tags,
+      additionalSections,
+      media,
+    });
+    axios.post('http://127.0.0.1:8000/api/blog/posts/', {
+      title,
+      content,
+      category,
+      tags,
+      // additionalSections,
+      // media,
+    })
+    .then(response => {
+      console.log(response.data);
+      setPosts([...posts, response.data]); // Add the new post to the list
+      resetForm();
+    })
+    .catch(error => console.error(error));
   };
 
   const handleTagChange = (index, value) => {
@@ -211,93 +234,89 @@ const BlogPostCreator = () => {
                 >
                   <option value="audio">Audio</option>
                   <option value="video">Video</option>
-                  <option value="gif">GIF</option>
+                  <option value="image">Image</option>
                 </select>
                 <input
-                  type="url"
-                  placeholder="Media URL"
+                  type="text"
+                  placeholder="Enter media URL"
                   className="input input-bordered w-full mb-2 focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-200"
                   value={item.url}
                   onChange={(e) => handleMediaChange(index, 'url', e.target.value)}
                 />
                 <input
                   type="text"
-                  placeholder="Media Description"
+                  placeholder="Enter media description"
                   className="input input-bordered w-full mb-2 focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-200"
                   value={item.description}
                   onChange={(e) => handleMediaChange(index, 'description', e.target.value)}
                 />
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => handleRemoveMedia(index)}>
+                <button type="button" className="btn btn-ghost btn-sm mt-2" onClick={() => handleRemoveMedia(index)}>
                   <Minus size={16} className="mr-1" /> Remove Media
                 </button>
               </div>
             ))}
-            <div className="flex space-x-2">
-              <button type="button" className="btn btn-outline btn-sm" onClick={() => handleAddMedia('audio')}>
-                <Music size={16} className="mr-1" /> Add Audio
-              </button>
-              <button type="button" className="btn btn-outline btn-sm" onClick={() => handleAddMedia('video')}>
-                <Video size={16} className="mr-1" /> Add Video
-              </button>
-              <button type="button" className="btn btn-outline btn-sm" onClick={() => handleAddMedia('gif')}>
-                <Image size={16} className="mr-1" /> Add GIF
-              </button>
-            </div>
+            <button type="button" className="btn btn-outline btn-sm mt-2" onClick={() => handleAddMedia('image')}>
+              <Image size={16} className="mr-1" /> Add Image
+            </button>
+            <button type="button" className="btn btn-outline btn-sm mt-2" onClick={() => handleAddMedia('audio')}>
+              <Music size={16} className="mr-1" /> Add Audio
+            </button>
+            <button type="button" className="btn btn-outline btn-sm mt-2" onClick={() => handleAddMedia('video')}>
+              <Video size={16} className="mr-1" /> Add Video
+            </button>
           </div>
 
-          <div className="flex justify-between mt-8">
-            <button type="submit" className="btn btn-primary px-6 py-2">
-              {editingId !== null ? 'Update Post' : 'Add Post'}
+          <div className="flex justify-end gap-4">
+            <button type="button" className="btn btn-ghost btn-sm" onClick={resetForm}>
+              <X size={16} /> Cancel
             </button>
-            {editingId !== null && (
-              <button type="button" className="btn btn-ghost" onClick={resetForm}>
-                Cancel Edit
-              </button>
-            )}
+            <button type="submit" className="btn btn-primary">
+              <Save size={16} /> Save Post
+            </button>
           </div>
         </form>
       </div>
 
-      {/* Blog Posts List */}
-      <div className="bg-base rounded-lg shadow-lg p-6">
-        <h2 className="text-3xl font-semibold text-base-800 mb-6">Blog Posts</h2>
-        <div className="mb-4 flex space-x-4">
-          <input
-            type="text"
-            placeholder="Search posts..."
-            className="input input-bordered w-full bg-base-50 focus:border-base-500 focus:ring focus:ring-blue-200 transition duration-200"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      <div className="bg-base rounded-lg shadow-lg p-6 mt-8">
+        <input
+          type="text"
+          className="input input-bordered w-full mb-4 bg-base-50"
+          placeholder="Search posts..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <div className="flex gap-4 mb-4">
           <select
-            className="select select-bordered bg-base-50 focus:border-base-500 focus:ring focus:ring-blue-200 transition duration-200"
+            className="select select-bordered w-full bg-base-50"
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
           >
-            <option value="">All Categories</option>
+            <option value="">Filter by category</option>
             {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
+              <option key={cat} value={cat}>{cat}</option>
             ))}
           </select>
         </div>
 
         <div className="space-y-4">
           {filteredPosts.map((post) => (
-            <div key={post.id} className="p-4 border rounded-lg bg-base-50 shadow-sm hover:shadow-lg transition duration-200">
-              <h3 className="text-2xl font-semibold text-gray-800">{post.title}</h3>
-              <p className="text-gray-600">{post.content}</p>
-              <div className="flex justify-between items-center mt-4">
-                <span className="text-sm text-gray-500">{formatDate(post.createdAt)}</span>
-                <div className="space-x-2">
-                  <button className="btn btn-sm btn-outline" onClick={() => handleEdit(post)}>
-                    <Edit size={16} className="mr-1" /> Edit
-                  </button>
-                  <button className="btn btn-sm btn-outline" onClick={() => handleDelete(post.id)}>
-                    <Trash size={16} className="mr-1" /> Delete
-                  </button>
-                </div>
+            <div key={post.id} className="border p-4 rounded-lg bg-base-50">
+              <h3 className="text-xl font-semibold">{post.title}</h3>
+              <p className="text-sm text-gray-600">Category: {post.category}</p>
+              <p className="my-2">{post.content}</p>
+              <div className="flex gap-4 mt-4">
+                <button
+                  className="btn btn-outline btn-sm"
+                  onClick={() => handleEdit(post)}
+                >
+                  <Edit size={16} /> Edit
+                </button>
+                <button
+                  className="btn btn-outline btn-sm text-red-500"
+                  onClick={() => handleDelete(post.id)}
+                >
+                  <Trash size={16} /> Delete
+                </button>
               </div>
             </div>
           ))}
@@ -308,7 +327,3 @@ const BlogPostCreator = () => {
 };
 
 export default BlogPostCreator;
-
-
-
-// https://claude.ai/
