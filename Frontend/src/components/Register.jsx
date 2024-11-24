@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Mail, Lock, User } from 'lucide-react';
+import LoginPage from './login/Login';
+import { Mail, Lock, User, Accessibility } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const RegistrationPage = () => {
   const [formData, setFormData] = useState({
@@ -7,20 +9,42 @@ const RegistrationPage = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    hasAccessibilityNeeds: false,
+    accessibilityNeeds: [],
+    otherAccessibilityNeed: '',
     agreeTerms: false,
   });
 
+  const accessibilityOptions = [
+    { value: 'deaf', label: 'Deaf or Hard of Hearing' },
+    // { value: 'visual', label: 'Visual Impairment' },
+    // { value: 'mobility', label: 'Mobility Impairment' },
+    // { value: 'cognitive', label: 'Cognitive Disability' },
+    { value: 'speech', label: 'Speech Impairment' },
+    { value: 'other', label: 'Other' }
+  ];
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    if (type === 'checkbox' && name === 'accessibilityNeeds') {
+      const updatedNeeds = checked 
+        ? [...formData.accessibilityNeeds, value]
+        : formData.accessibilityNeeds.filter(need => need !== value);
+      
+      setFormData(prevState => ({
+        ...prevState,
+        accessibilityNeeds: updatedNeeds
+      }));
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: type === 'checkbox' ? checked : value
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically send the form data to your backend
     console.log('Sign-up form submitted:', formData);
   };
 
@@ -47,6 +71,7 @@ const RegistrationPage = () => {
                 />
               </div>
             </div>
+
             <div className="form-control mt-4">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -64,6 +89,7 @@ const RegistrationPage = () => {
                 />
               </div>
             </div>
+
             <div className="form-control mt-4">
               <label className="label">
                 <span className="label-text">Password</span>
@@ -81,6 +107,7 @@ const RegistrationPage = () => {
                 />
               </div>
             </div>
+
             <div className="form-control mt-4">
               <label className="label">
                 <span className="label-text">Confirm Password</span>
@@ -98,6 +125,59 @@ const RegistrationPage = () => {
                 />
               </div>
             </div>
+
+            <div className="form-control mt-6">
+              <label className="label cursor-pointer justify-start">
+                <input 
+                  type="checkbox"
+                  name="hasAccessibilityNeeds"
+                  checked={formData.hasAccessibilityNeeds}
+                  onChange={handleChange}
+                  className="checkbox checkbox-primary mr-2"
+                />
+                <span className="label-text flex items-center">
+                  <Accessibility size={18} className="mr-2" />
+                  I have accessibility needs
+                </span>
+              </label>
+            </div>
+
+            {formData.hasAccessibilityNeeds && (
+              <div className="form-control mt-4 p-4 bg-base-200 rounded-lg">
+                <label className="label">
+                  <span className="label-text font-medium">Please select all that apply:</span>
+                </label>
+                <div className="space-y-2">
+                  {accessibilityOptions.map((option) => (
+                    <label key={option.value} className="label cursor-pointer justify-start">
+                      <input
+                        type="checkbox"
+                        name="accessibilityNeeds"
+                        value={option.value}
+                        checked={formData.accessibilityNeeds.includes(option.value)}
+                        onChange={handleChange}
+                        className="checkbox checkbox-primary mr-2"
+                      />
+                      <span className="label-text">{option.label}</span>
+                    </label>
+                  ))}
+                </div>
+                
+                {formData.accessibilityNeeds.includes('other') && (
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      name="otherAccessibilityNeed"
+                      value={formData.otherAccessibilityNeed}
+                      onChange={handleChange}
+                      placeholder="Please specify your accessibility needs"
+                      className="input input-bordered w-full"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="form-control mt-6">
               <label className="label cursor-pointer justify-start">
                 <input 
@@ -110,14 +190,21 @@ const RegistrationPage = () => {
                 <span className="label-text">I agree to the Terms and Conditions</span>
               </label>
             </div>
+
             <div className="form-control mt-6">
-              <button type="submit" className="btn btn-primary" disabled={!formData.agreeTerms}>Sign Up</button>
+              <button type="submit" className="btn btn-primary" disabled={!formData.agreeTerms}>
+                Sign Up
+              </button>
             </div>
           </form>
+
           <div className="divider">OR</div>
           <div className="text-center">
             <p>Already have an account?</p>
-            <a href="#" className="link link-primary">Log in here</a>
+            <Link to="/login" className="link link-primary">
+              Log in here
+            </Link>
+            
           </div>
         </div>
       </div>
