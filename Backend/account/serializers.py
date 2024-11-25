@@ -1,9 +1,15 @@
 from rest_framework import serializers
-from account.models import User
+from account.models import User,AccessibilityNeed
 from django.utils.encoding import smart_str,force_bytes,DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.auth.password_validation import validate_password 
 from account.utils import Util
+
+class AccessibilityNeedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccessibilityNeed
+        fields = ['value', 'name']
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)

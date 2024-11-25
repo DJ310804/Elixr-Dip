@@ -1,6 +1,25 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
+class AccessibilityNeed(models.Model):
+    name = models.CharField(max_length=100)
+    value = models.CharField(max_length=50, unique=True)
+    
+    class Meta:
+        verbose_name = 'Accessibility Need'
+        verbose_name_plural = 'Accessibility Needs'
+
+    def __str__(self):
+        return self.name
+    
+    @classmethod
+    def get_default_needs(cls):
+        return [
+            {'value': 'deaf', 'name': 'Deaf or Hard of Hearing'},
+            {'value': 'speech', 'name': 'Speech Impairment'},
+            {'value': 'other', 'name': 'Other'}
+        ]
+
 class UserManager(BaseUserManager):
     def create_user(self, email,tc, password=None):
         """
@@ -45,6 +64,9 @@ class User(AbstractBaseUser):
     is_subscribed = models.BooleanField(default=False)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
+
+    has_accessibility_needs = models.BooleanField(default=False)
+    accessibility_needs = models.ManyToManyField(AccessibilityNeed, blank=True)
 
     objects = UserManager()
 

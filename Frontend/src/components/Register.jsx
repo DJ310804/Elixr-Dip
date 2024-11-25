@@ -47,13 +47,14 @@ function RegistrationPage() {
       password: formData.password,
       password2: formData.confirmPassword,
       tc: formData.agreeTerms.toString(),
-      accessibilityNeeds: formData.hasAccessibilityNeeds
-        ? formData.accessibilityNeeds
-        : null,
-      otherAccessibilityNeed: formData.otherAccessibilityNeed || null,
+      // accessibilityNeeds: formData.hasAccessibilityNeeds
+      //   ? formData.accessibilityNeeds
+      //   : null,
+      // otherAccessibilityNeed: formData.otherAccessibilityNeed || null,
     };
 
     try {
+      console.log(data)
       const response = await axios.post('http://127.0.0.1:8000/api/user/register/', data, {
         headers: {
           'Content-Type': 'application/json',
