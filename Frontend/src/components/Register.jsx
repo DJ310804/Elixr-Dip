@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User } from 'lucide-react';
+import axios from 'axios';
 
-const RegistrationPage = () => {
+function RegistrationPage() {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -10,18 +13,50 @@ const RegistrationPage = () => {
     agreeTerms: false,
   });
 
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value,
+    });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you would typically send the form data to your backend
-    console.log('Sign-up form submitted:', formData);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Validate form data before sending the request
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    const data = {
+      name: formData.username,
+      email: formData.email,
+      password: formData.password,
+      password2: formData.confirmPassword,
+      tc: formData.agreeTerms.toString(), // Convert boolean to string
+    };
+
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/user/register/', data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.data) {
+        const { msg } = response.data;
+        console.log('Message:', msg);
+
+        // Navigate to the login page on successful registration
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error('Error during registration:', error.response?.data || error.message);
+      alert('Registration failed, please check your details.');
+    }
   };
 
   return (
@@ -35,7 +70,9 @@ const RegistrationPage = () => {
                 <span className="label-text">Username</span>
               </label>
               <div className="input-group">
-                <span><User size={18} /></span>
+                <span>
+                  <User size={18} />
+                </span>
                 <input
                   type="text"
                   name="username"
@@ -52,7 +89,9 @@ const RegistrationPage = () => {
                 <span className="label-text">Email</span>
               </label>
               <div className="input-group">
-                <span><Mail size={18} /></span>
+                <span>
+                  <Mail size={18} />
+                </span>
                 <input
                   type="email"
                   name="email"
@@ -69,7 +108,9 @@ const RegistrationPage = () => {
                 <span className="label-text">Password</span>
               </label>
               <div className="input-group">
-                <span><Lock size={18} /></span>
+                <span>
+                  <Lock size={18} />
+                </span>
                 <input
                   type="password"
                   name="password"
@@ -86,7 +127,9 @@ const RegistrationPage = () => {
                 <span className="label-text">Confirm Password</span>
               </label>
               <div className="input-group">
-                <span><Lock size={18} /></span>
+                <span>
+                  <Lock size={18} />
+                </span>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -100,29 +143,33 @@ const RegistrationPage = () => {
             </div>
             <div className="form-control mt-6">
               <label className="label cursor-pointer justify-start">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   name="agreeTerms"
                   checked={formData.agreeTerms}
                   onChange={handleChange}
-                  className="checkbox checkbox-primary mr-2" 
+                  className="checkbox checkbox-primary mr-2"
                 />
                 <span className="label-text">I agree to the Terms and Conditions</span>
               </label>
             </div>
             <div className="form-control mt-6">
-              <button type="submit" className="btn btn-primary" disabled={!formData.agreeTerms}>Sign Up</button>
+              <button type="submit" className="btn btn-primary" disabled={!formData.agreeTerms}>
+                Sign Up
+              </button>
             </div>
           </form>
           <div className="divider">OR</div>
           <div className="text-center">
             <p>Already have an account?</p>
-            <a href="#" className="link link-primary">Log in here</a>
+            <Link to="/login" className="link link-primary">
+              Log in here
+            </Link>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default RegistrationPage;

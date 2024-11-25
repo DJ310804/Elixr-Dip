@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import './App.css';
-import ThemeToggler from './components/theme/ThemeToggler';
+import { AuthProvider } from './components/context/AuthContext';
 import Dashboard from './components/dashboard/dashboard';
 
 function App() {
   return (
+    <AuthProvider>
     <Dashboard/>
+    </AuthProvider>
   );
 }
 

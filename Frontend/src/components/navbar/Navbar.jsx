@@ -1,13 +1,25 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiSun } from 'react-icons/fi';
 import ThemeToggler from '../theme/ThemeToggler';
+import { useAuthContext } from '../context/AuthContext';
 
 const Navbar = () => {
   const [showThemeToggler, setShowThemeToggler] = useState(false);
+  const { isLoggedIn, setIsLoggedIn, setLoginStatus } = useAuthContext(); // Access AuthContext
+  const navigate = useNavigate(); // Navigation hook
 
   const handleThemeIconClick = () => {
     setShowThemeToggler((prev) => !prev);
+  };
+
+  const handleLogout = () => {
+    // Clear session and logout
+    sessionStorage.removeItem('accessToken'); // Remove access token
+    document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Clear refresh token cookie
+    setIsLoggedIn(false); // Update auth context
+    setLoginStatus('Login'); // Reset login status
+    navigate('/'); // Redirect to home
   };
 
   return (
@@ -26,17 +38,17 @@ const Navbar = () => {
           >
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
           </svg>
-          <Link
-                  to="/"
-                >
-                 <span className="ml-3 text-xl text-base">Elixr</span>
+          <Link to="/">
+            <span className="ml-3 text-xl text-base">Elixr</span>
           </Link>
         </a>
         <nav className="flex flex-wrap items-center text-base">
-          <Link to="/" className="mr-5 text-base hover:text-gray-700">Home</Link>
+          <Link to="/home" className="mr-5 text-base hover:text-gray-700">Home</Link>
           <Link to="/blogs" className="mr-5 text-base hover:text-gray-700">Blogs</Link>
           <Link to="/chat" className="mr-5 text-base hover:text-gray-700">Chat</Link>
-          <Link to="/addBlog" className="mr-5 text-base hover:text-gray-700">New Blog</Link>
+          {isLoggedIn && (
+            <Link to="/addBlog" className="mr-5 text-base hover:text-gray-700">New Blog</Link>
+          )}
         </nav>
         <div className="flex items-center">
           <button
@@ -50,8 +62,16 @@ const Navbar = () => {
               <ThemeToggler />
             </div>
           )}
-          <Link to="/login" className="ml-4 text-base hover:text-gray-700">Login</Link>
-          <Link to="/register" className="ml-4 text-base hover:text-gray-700">Register</Link>
+          {isLoggedIn ? (
+            <button
+              className="ml-4 text-base hover:text-gray-700"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          ) : (
+            <Link to="/login" className="ml-4 text-base hover:text-gray-700">Login</Link>
+          )}
         </div>
       </div>
     </header>

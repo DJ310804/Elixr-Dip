@@ -14,6 +14,9 @@ import VideoChat from './components/videochat/VideoChat.jsx';
 import LoginPage from './components/login/Login.jsx';
 import Home from './components/home/Home.jsx';
 import RegistrationPage from './components/Register.jsx';
+import ConnectionPage from './components/connection/connectionPage.jsx';
+import { AuthProvider } from './components/context/AuthContext.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 const Root = () => {
   const currentTheme = useSelector((state) => state.theme.theme);
@@ -29,23 +32,33 @@ const Root = () => {
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
+      {/* Public Routes */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegistrationPage />} />
       <Route path="/" element={<Layout />}>
         <Route index element={<App />} />
-        <Route path="/blogs" element={<><Blogs /></>} />
-        <Route path="/addBlog" element={<><AddBlogs /></>} />
-        <Route path="/blog" element={<BlogPage />} />
         <Route path="/home" element={<Home />} />
       </Route>
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/video-chat" element={<VideoChat />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegistrationPage />} />
+
+      {/* Protected Routes */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Layout />}>
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/addBlog" element={<AddBlogs />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/video-chat" element={<VideoChat />} />
+          <Route path="/connection" element={<ConnectionPage />} />
+        </Route>
+      </Route>
     </>
   )
 );
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <Root />
+    <AuthProvider>
+      <Root />
+    </AuthProvider>
   </Provider>
 );
