@@ -4,4 +4,5 @@ from django.urls import path,include
 urlpatterns = [
     path('user/', include('account.urls')),
     path('blog/', include('blog.urls')),
+    path('connect/', include('connect.urls')),
 ]

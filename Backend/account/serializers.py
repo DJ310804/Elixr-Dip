@@ -6,23 +6,27 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from account.utils import Util
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password2=serializers.CharField(style={'input_type':'password'},write_only=True)
+    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+
     class Meta:
-        model=User
-        fields=['email','password','password2','tc']
+        model = User
+        fields = ['email', 'password', 'password2', 'tc']
         extra_kwargs = {
             'password': {'write_only': True, 'min_length': 5},
         }
 
     def validate(self, attrs):
-        password=attrs.get('password')
-        password2=attrs.get('password2')
-        if password!=password2:
-            raise serializers.ValidationError({'Password and Confirm Password do not match'})
+        password = attrs.get('password')
+        password2 = attrs.get('password2')
+        if password != password2:
+            raise serializers.ValidationError({'password': 'Password and Confirm Password do not match'})
         return attrs
-    
-    def create(self, validate_data):
-        return User.objects.create_user(**validate_data)
+
+    def create(self, validated_data):
+        # Explicitly remove password2 before passing data to create_user
+        password2 = validated_data.pop('password2', None)  # Pop safely even if password2 isn't present
+        return User.objects.create_user(**validated_data)
+
     
 class UserLoginSerializer(serializers.ModelSerializer):
     email=serializers.EmailField(max_length=255)

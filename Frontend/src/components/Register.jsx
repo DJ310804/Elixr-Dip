@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import LoginPage from './login/Login';
-import { Mail, Lock, User, Accessibility } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Mail, Lock, Accessibility } from 'lucide-react';
+import axios from 'axios';
 
-const RegistrationPage = () => {
+function RegistrationPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -15,38 +15,72 @@ const RegistrationPage = () => {
     agreeTerms: false,
   });
 
-  const accessibilityOptions = [
-    { value: 'deaf', label: 'Deaf or Hard of Hearing' },
-    // { value: 'visual', label: 'Visual Impairment' },
-    // { value: 'mobility', label: 'Mobility Impairment' },
-    // { value: 'cognitive', label: 'Cognitive Disability' },
-    { value: 'speech', label: 'Speech Impairment' },
-    { value: 'other', label: 'Other' }
-  ];
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (type === 'checkbox' && name === 'accessibilityNeeds') {
-      const updatedNeeds = checked 
-        ? [...formData.accessibilityNeeds, value]
-        : formData.accessibilityNeeds.filter(need => need !== value);
-      
-      setFormData(prevState => ({
-        ...prevState,
-        accessibilityNeeds: updatedNeeds
-      }));
+
+    if (name === 'accessibilityNeeds') {
+      const newNeeds = formData.accessibilityNeeds.includes(value)
+        ? formData.accessibilityNeeds.filter((need) => need !== value)
+        : [...formData.accessibilityNeeds, value];
+      setFormData({
+        ...formData,
+        accessibilityNeeds: newNeeds,
+      });
     } else {
-      setFormData(prevState => ({
-        ...prevState,
-        [name]: type === 'checkbox' ? checked : value
-      }));
+      setFormData({
+        ...formData,
+        [name]: type === 'checkbox' ? checked : value,
+      });
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Sign-up form submitted:', formData);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    const data = {
+      email: formData.email,
+      password: formData.password,
+      password2: formData.confirmPassword,
+      tc: formData.agreeTerms.toString(),
+      accessibilityNeeds: formData.hasAccessibilityNeeds
+        ? formData.accessibilityNeeds
+        : null,
+      otherAccessibilityNeed: formData.otherAccessibilityNeed || null,
+    };
+
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/user/register/', data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.data) {
+        const { msg } = response.data;
+        console.log('Message:', msg);
+
+        // Navigate to the login page on successful registration
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error('Error during registration:', error.response?.data || error.message);
+      alert('Registration failed, please check your details.');
+    }
   };
+
+  const accessibilityOptions = [
+    { value: 'deaf', label: 'Deaf or Hard of Hearing' },
+    { value: 'visual', label: 'Visual Impairment' },
+    { value: 'mobility', label: 'Mobility Impairment' },
+    { value: 'cognitive', label: 'Cognitive Disability' },
+    { value: 'speech', label: 'Speech Impairment' },
+    { value: 'other', label: 'Other' },
+  ];
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">
@@ -54,30 +88,14 @@ const RegistrationPage = () => {
         <div className="card-body">
           <h2 className="card-title text-2xl font-bold text-center mb-6">Sign Up</h2>
           <form onSubmit={handleSubmit}>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Username</span>
-              </label>
-              <div className="input-group">
-                <span><User size={18} /></span>
-                <input
-                  type="text"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  placeholder="Choose a username"
-                  className="input input-bordered w-full"
-                  required
-                />
-              </div>
-            </div>
-
             <div className="form-control mt-4">
               <label className="label">
                 <span className="label-text">Email</span>
               </label>
               <div className="input-group">
-                <span><Mail size={18} /></span>
+                <span>
+                  <Mail size={18} />
+                </span>
                 <input
                   type="email"
                   name="email"
@@ -95,7 +113,9 @@ const RegistrationPage = () => {
                 <span className="label-text">Password</span>
               </label>
               <div className="input-group">
-                <span><Lock size={18} /></span>
+                <span>
+                  <Lock size={18} />
+                </span>
                 <input
                   type="password"
                   name="password"
@@ -113,7 +133,9 @@ const RegistrationPage = () => {
                 <span className="label-text">Confirm Password</span>
               </label>
               <div className="input-group">
-                <span><Lock size={18} /></span>
+                <span>
+                  <Lock size={18} />
+                </span>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -128,7 +150,7 @@ const RegistrationPage = () => {
 
             <div className="form-control mt-6">
               <label className="label cursor-pointer justify-start">
-                <input 
+                <input
                   type="checkbox"
                   name="hasAccessibilityNeeds"
                   checked={formData.hasAccessibilityNeeds}
@@ -162,7 +184,7 @@ const RegistrationPage = () => {
                     </label>
                   ))}
                 </div>
-                
+
                 {formData.accessibilityNeeds.includes('other') && (
                   <div className="mt-2">
                     <input
@@ -180,19 +202,28 @@ const RegistrationPage = () => {
 
             <div className="form-control mt-6">
               <label className="label cursor-pointer justify-start">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   name="agreeTerms"
                   checked={formData.agreeTerms}
                   onChange={handleChange}
-                  className="checkbox checkbox-primary mr-2" 
+                  className="checkbox checkbox-primary mr-2"
                 />
                 <span className="label-text">I agree to the Terms and Conditions</span>
               </label>
             </div>
 
             <div className="form-control mt-6">
-              <button type="submit" className="btn btn-primary" disabled={!formData.agreeTerms}>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={
+                  !formData.agreeTerms ||
+                  !formData.email ||
+                  !formData.password ||
+                  !formData.confirmPassword
+                }
+              >
                 Sign Up
               </button>
             </div>
@@ -204,12 +235,11 @@ const RegistrationPage = () => {
             <Link to="/login" className="link link-primary">
               Log in here
             </Link>
-            
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default RegistrationPage;

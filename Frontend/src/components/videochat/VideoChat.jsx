@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import ThemeToggler from '../theme/ThemeToggler';
 import { FaBars, FaVideo, FaVideoSlash, FaMicrophone, FaMicrophoneSlash, FaDesktop, FaHome, FaForward, FaPaperPlane, FaTimes, FaPaperclip } from 'react-icons/fa';
 import { FiSun } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 const VideoChat = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -116,14 +117,14 @@ const VideoChat = () => {
           )}
         </div>
         <nav className="flex-grow overflow-y-auto flex flex-col">
-          <a href="#" className="flex items-center mt-4 py-2 px-6 hover:bg-base-300 transition-colors duration-200">
+          <Link to="#" className="flex items-center mt-4 py-2 px-6 hover:bg-base-300 transition-colors duration-200">
             <FaForward className="mr-3" />
             Skip
-          </a>
-          <a href="#" className="flex items-center mt-2 py-2 px-6 hover:bg-base-300 transition-colors duration-200">
+          </Link>
+          <Link to="#" className="flex items-center mt-2 py-2 px-6 hover:bg-base-300 transition-colors duration-200">
             <FaHome className="mr-3" />
             Home
-          </a>
+          </Link>
           <div className="mt-8 px-6 flex-grow flex flex-col">
             <h3 className="text-lg font-semibold mb-4">Chat</h3>
             <div ref={chatContainerRef} className="flex-grow overflow-y-auto bg-base-100 rounded-lg p-2 mb-4 shadow-inner">
