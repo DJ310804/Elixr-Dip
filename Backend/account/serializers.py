@@ -12,60 +12,27 @@ class AccessibilityNeedSerializer(serializers.ModelSerializer):
         fields = ['value', 'name']
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    # password = serializers.CharField(
-    #     write_only=True, 
-    #     required=True, 
-    #     validators=[validate_password],
-    #     style={'input_type': 'password'}
-    # )
-    # password2 = serializers.CharField(
-    #     write_only=True, 
-    #     required=True,
-    #     style={'input_type': 'password'}
-    # )
-    # accessibility_needs = serializers.ListField(
-    #     child=serializers.CharField(),
-    #     required=False,
-    #     write_only=True
-    # )
-    # tc = serializers.BooleanField(required=True)
+    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     class Meta:
-            model=User
-            fields=['email','password','password2','tc','has_accessibility_needs','accessibility_needs','other_accessibility_need']
-            extra_kwargs = {
-                'password': {'write_only': True, 'min_length': 5},
-            }
+        model = User
+        fields = ['email', 'password', 'password2', 'tc']
+        extra_kwargs = {
+            'password': {'write_only': True, 'min_length': 5},
+        }
 
-            def validate(self, attrs):
-                password=attrs.get('password')
-                password2=attrs.get('password2')
-                if password!=password2:
-                    raise serializers.ValidationError({'Password and Confirm Password do not match'})
-                return attrs
-        
-        #     def create(self, validate_data):
-        #         accessibility_needs = validate_data.pop('accessibility_needs', [])
+    def validate(self, attrs):
+        password = attrs.get('password')
+        password2 = attrs.get('password2')
+        if password != password2:
+            raise serializers.ValidationError({'password': 'Password and Confirm Password do not match'})
+        return attrs
 
-        #         user = User.objects.create_user(
-        #         email=validate_data['email'],
-        #         username=validate_data['username'],
-        #         password=validate_data['password'],
-        #         tc=validate_data['tc'],
-        #         has_accessibility_needs=validate_data.get('has_accessibility_needs', False),
-        #         other_accessibility_need=validate_data.get('other_accessibility_need', '')
-        # )
+    def create(self, validated_data):
+        # Explicitly remove password2 before passing data to create_user
+        password2 = validated_data.pop('password2', None)  # Pop safely even if password2 isn't present
+        return User.objects.create_user(**validated_data)
 
-        #         if User.has_accessibility_needs:
-        #             for need_value in accessibility_needs:
-        #                 need, _ = AccessibilityNeed.objects.get_or_create(
-        #                     value=need_value,
-        #                     defaults={'name': need_value.replace('_', ' ').title()}
-        #                 )
-        #                 User.accessibility_needs.add(need)
-        #         return User.objects.create_user(**validate_data)
-            
-            
     
 class UserLoginSerializer(serializers.ModelSerializer):
     email=serializers.EmailField(max_length=255)

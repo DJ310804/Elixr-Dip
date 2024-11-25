@@ -19,7 +19,7 @@ const Chat = () => {
         {/* Messages */}
         <Messages />
 
-        {/* Chat Input Area */}
+        Chat Input Area
         <ChatArea />
       </div>
     </div>
