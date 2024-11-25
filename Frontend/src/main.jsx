@@ -14,6 +14,7 @@ import VideoChat from './components/videochat/VideoChat.jsx';
 import LoginPage from './components/login/Login.jsx';
 import Home from './components/home/Home.jsx';
 import RegistrationPage from './components/Register.jsx';
+import ChatPreview from './components/chat/Preview.jsx';
 
 const Root = () => {
   const currentTheme = useSelector((state) => state.theme.theme);
@@ -37,6 +38,7 @@ const router = createBrowserRouter(
         <Route path="/home" element={<Home />} />
       </Route>
         <Route path="/chat" element={<Chat />} />
+        <Route path="/chat/preview" element={<ChatPreview/>} />
         <Route path="/video-chat" element={<VideoChat />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegistrationPage />} />

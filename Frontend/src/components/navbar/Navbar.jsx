@@ -35,7 +35,7 @@ const Navbar = () => {
         <nav className="flex flex-wrap items-center text-base">
           <Link to="/" className="mr-5 text-base hover:text-gray-700">Home</Link>
           <Link to="/blogs" className="mr-5 text-base hover:text-gray-700">Blogs</Link>
-          <Link to="/chat" className="mr-5 text-base hover:text-gray-700">Chat</Link>
+          <Link to="/chat/preview" className="mr-5 text-base hover:text-gray-700">Chat</Link>
           <Link to="/addBlog" className="mr-5 text-base hover:text-gray-700">New Blog</Link>
         </nav>
         <div className="flex items-center">
