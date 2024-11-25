@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useNavigate,Link } from "react-router-dom"; // Import useNavigate for navigation
 import axios from "axios";
 import { AlertCircle } from "lucide-react";
 import { useAuthContext } from "../context/AuthContext";
@@ -90,9 +90,9 @@ const LoginPage = () => {
               <button className="btn btn-primary" type="submit">
                 Login
               </button>
-              <a href="#" className="link link-hover text-sm">
+              <Link to="#" className="link link-hover text-sm">
                 Forgot password?
-              </a>
+              </Link>
             </div>
           </form>
 

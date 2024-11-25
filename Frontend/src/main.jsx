@@ -35,25 +35,20 @@ const router = createBrowserRouter(
       {/* Public Routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegistrationPage />} />
+      <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
       <Route path="/" element={<Layout />}>
         <Route index element={<App />} />
+        <Route path="/connection" element={<ProtectedRoute><ConnectionPage /></ProtectedRoute>} />
         <Route path="/home" element={<Home />} />
-      </Route>
-
-      {/* Protected Routes */}
-      <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<Layout />}>
-          <Route path="/blogs" element={<Blogs />} />
-          <Route path="/addBlog" element={<AddBlogs />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/video-chat" element={<VideoChat />} />
-          <Route path="/connection" element={<ConnectionPage />} />
-        </Route>
+        <Route path="/blogs" element={<ProtectedRoute><Blogs /></ProtectedRoute>} />
+        <Route path="/addBlog" element={<ProtectedRoute><AddBlogs/></ProtectedRoute>} />
+        <Route path="/blog" element={<ProtectedRoute><BlogPage /></ProtectedRoute>} />
+        <Route path="/video-chat" element={<ProtectedRoute><VideoChat /></ProtectedRoute>} />
       </Route>
     </>
   )
 );
+
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>

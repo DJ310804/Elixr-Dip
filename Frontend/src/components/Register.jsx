@@ -6,7 +6,6 @@ import axios from 'axios';
 function RegistrationPage() {
   const navigate = useNavigate(); // Initialize useNavigate
   const [formData, setFormData] = useState({
-    username: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -32,11 +31,10 @@ function RegistrationPage() {
     }
 
     const data = {
-      name: formData.username,
       email: formData.email,
       password: formData.password,
       password2: formData.confirmPassword,
-      tc: formData.agreeTerms.toString(), // Convert boolean to string
+      tc: formData.agreeTerms.toString(), 
     };
 
     try {
@@ -54,6 +52,7 @@ function RegistrationPage() {
         navigate('/login');
       }
     } catch (error) {
+      console.log(error)
       console.error('Error during registration:', error.response?.data || error.message);
       alert('Registration failed, please check your details.');
     }
@@ -65,25 +64,6 @@ function RegistrationPage() {
         <div className="card-body">
           <h2 className="card-title text-2xl font-bold text-center mb-6">Sign Up</h2>
           <form onSubmit={handleSubmit}>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Username</span>
-              </label>
-              <div className="input-group">
-                <span>
-                  <User size={18} />
-                </span>
-                <input
-                  type="text"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  placeholder="Choose a username"
-                  className="input input-bordered w-full"
-                  required
-                />
-              </div>
-            </div>
             <div className="form-control mt-4">
               <label className="label">
                 <span className="label-text">Email</span>
