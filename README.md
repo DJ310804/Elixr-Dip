@@ -18,6 +18,7 @@ Currently, two official plugins are available:
 # npm i react-router-dom
 
 # npm install react-icons
+# npm install axios
 
 # Update the requirements.txt in the backend folder
 # Update the installed apps and middleware in the settings.py in BACKEND
